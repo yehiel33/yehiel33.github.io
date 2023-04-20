@@ -6,8 +6,26 @@ output_dir: "docs"
 theme: My-theme.css # specifing that we what to use our own theme
 navbar:
   right:
-    - text: "Home"
-      href: index.html
-    - text: "About"
-      href: about.html
+    - text: "About me"
+      href: about_me.html
+    - text: "Academic Projects"
+      menu:
+          - text: "Data Science"
+            href: Data_Science.html
+          - text: "Practical statistics"
+            href: Data_scince.html
+          - text: "Programing"
+            href: Programing.html
+          - text: "Experimental Design"
+            href: Experimental_Design.html
+    - text: "SQL"
+      menu:
+          - text: Simple SQL 
+            href: SIMSQL.html
+          - text: Advanced SQL 
+            href: ADVSQL.html
+    - text: "R"
+      href: R.html
+    - text: "Data Center"
+      href: Data Center.html
 output: distill::distill_article
