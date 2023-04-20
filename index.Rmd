@@ -15,25 +15,21 @@ site: distill::distill_website
  
 ## Bio
 
-Frank Hermosillo studies neural networks and their applications at Google 
-Brain. His research focuses on differentiable network pruning approximation and 
-decentralized gradient inversion mechanics. He frequently collaborates with 
-researchers who study machine learning, computer vision, and cognitive science.
-His work has been featured in WIRED, The Atlantic, Newsweek, and The New York 
-Times Magazine.
+I am an ambitious industrial engineer graduate and professional data Center engineer with 10 years of hands-on experience. A strong believer in the can-do attitude, and with creativity and hard work I am always achieving my goals.
+The next step in my career will be a role that will excite me every morning, whether it's in engineering, analytical or consulting role. I look forward to exposing myself to new challenges and gaining new skills through this.
 
 ## Education
 
-**Massachusetts Institute of Technology** | Cambridge, MA
+**SCE** | Beer-Sheva, Israel
 
-Ph.D. in Computer Science | September 2009 - May 2014
-
-**The University of California, Berkeley** | Berkeley, CA
-
-B.S. in Computer Science | September 2005 - May 2009
+B.Sc. in Industrial Engineering and Management | October 2018 - March 2023
 
 ## Experience
 
-**Google Brain** | Principal Investigator | January 2018 - Present
+**Oracle** | Senior Data Center Engineer | August 2021 - Present
 
-**Netflix** | Research Scientist | June 2014 - December 2017
+**Leidos** | Data Center Engineer | December 2020 - May 2021
+
+**M.S.R Engineering & Development** | Data Center consultant | August 2017 - December 2020
+
+**IAF** | Research Scientist | January 2013 - January 2017
