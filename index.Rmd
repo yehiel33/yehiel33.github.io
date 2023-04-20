@@ -1,16 +1,17 @@
 ---
-title: "Yehiel Yegudayev"
-image: "yehiel_yegudayev.jpg"
+title: "Frank Hermosillo"
+image: "frank.jpg"
 links:
   - label: LinkedIn
-    url: "linkedin.com/in/yehiel-yegudayev-001174131"
+    url: "https://linkedin.com/"
+  - label: Twitter
+    url: "https://twitter.com/"
   - label: GitHub
     url: "https://github.com/"
   - label: Email
-    url: "mailto:yehiel33@gmail.com"
+    url: "mailto:email@email.com"
 output:
   postcards::trestles
-  
 site: distill::distill_website
 ---
  
