@@ -1,8 +1,9 @@
 name: "."
-title: "Yehiel Yegudayev"
+title: "Home"
 description: |
   yehiel yegudayev
 output_dir: "docs"
+theme: My-theme.css # specifing that we what to use our own theme
 navbar:
   right:
     - text: "Home"

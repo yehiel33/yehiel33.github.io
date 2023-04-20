@@ -15,8 +15,11 @@ site: distill::distill_website
  
 ## Bio
 
-I am an ambitious industrial engineer graduate and professional data Center engineer with 10 years of hands-on experience. A strong believer in the can-do attitude, and with creativity and hard work I am always achieving my goals.
-The next step in my career will be a role that will excite me every morning, whether it's in engineering, analytical or consulting role. I look forward to exposing myself to new challenges and gaining new skills through this.
+At the last 10 years i gained great experience and knowledge while working in 4 organisation in data center industry. In parallel, i graduated Bachelors degree in industrial engineering and management and majored in information systems.
+
+Now, i am fill ready to look for my next challenge and opportunity. I am very interested in data filed so i aim a target to became a data analyst.
+
+This web page combining with my github page will expose my projects and capabilities to you. 
 
 ## Education
 
