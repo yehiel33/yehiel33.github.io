@@ -1,0 +1,83 @@
+---
+title: "Experimental Design"
+description: |
+  As part of experimental design course in academics, i looked up for the parameters influancing housing prices. i used block model for this.
+  Score: 100
+date: "`r Sys.Date()`"
+output: distill::distill_article
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+---
+
+---
+# 1. Introduction
+
+
+
+---
+# 2. Model and Variables Definision:
+
+### Definisions:
+$y_{ij} = \mu + \alpha_{j}+\beta_{i} + \varepsilon_{ij}$
+
+$j$ = District
+
+$i$ = Municipal Status
+
+* $y_{ij}$ - Average salary for employees by municipal status and district 
+* $\mu$ - Expectation 
+* $\alpha_{j}$ - Impact of treatment j 
+* $\beta_{i}$ - Effect of block i  
+* $\varepsilon_{ij}$ - Random error 
+
+### Model Assumptions:
+* $\varepsilon_{ijk}$ ~ $Norm(0, Var^{2})$
+
+* Independence of observations
+
+* Assumption of Equal Variance
+
+### Model Assumptions:
+
+$H_{0}$: $\alpha_{1}$=$\alpha_{2}$=$\alpha_{3}$=$\alpha_{4}$
+
+$H_{1}$: Else
+
+$H_{1}$: $\beta_{1}$=$\beta_{2}$=$\beta_{3}$=$\beta_{4}$
+
+$H_{1}$: Else
+
+---
+
+# 3. Data Wrengling:
+
+
+
+
+
+---
+
+xfun::embed_file(here::here("Experimental_Design", "\docs\Experimental_Design_files\lamas_data.xlsx"), text = Download data source here")
+
+
+<div style="text-align: center>
+
+<img src="path.jpf" width="600px" min-width="300px" max width="300px" />
+
+</div>
+
+
+
+
+
+Distill is a publication format for scientific and technical writing, native to the web. 
+
+Learn more about using Distill for R Markdown at <https://rstudio.github.io/distill>.
+
+
+
+
+

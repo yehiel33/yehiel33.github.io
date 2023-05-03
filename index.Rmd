@@ -1,6 +1,6 @@
 ---
 title: "Yehiel Yegudayev"
-image: "yehiel_yegudayev.jpg"
+image: "Yehiel_Y.jpg"
 links:
   - label: '<i class="fab fa-linkedin"></i> LinkedIn'
     url: "https://www.linkedin.com/in/yehiel-yegudayev-001174131/"
