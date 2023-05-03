@@ -2471,7 +2471,7 @@ Score: 100</p></p>
 <h3 id="definisions">Definisions:</h3>
 <p><span class="math inline">\(y_{ij} = \mu + \alpha_{j}+\beta_{i} + \varepsilon_{ij}\)</span></p>
 <p><span class="math inline">\(j\)</span> = District</p>
-<p><span class="math inline">\(i\)</span> = Municipal Status</p>
+<p><span class="math inline">\(i\)</span> = Municipal status</p>
 <ul>
 <li><span class="math inline">\(y_{ij}\)</span> - Average salary for employees by municipal status and district</li>
 <li><span class="math inline">\(\mu\)</span> - Expectation</li>
@@ -2494,13 +2494,124 @@ Score: 100</p></p>
 <hr />
 <h1 id="data-wrengling">3. Data Wrengling:</h1>
 <hr />
+<h1 id="r">4. R</h1>
+<h3 id="load-libraries">Load Libraries</h3>
+<pre class="library(readxl)"><code>    library(vtable)
+    library(qwraps2) 
+    library(psych)
+    library(ggpubr)
+    library(lessR)
+    library(Hmisc)
+    library(ggplot2)
+    library(agricolae)
+    library(dplyr)
+    library(tidyr)
+    library(data.table)
+    
+### Load Data 
+    Salary &lt;- read_excel(&quot;C:\\Users\\yyeguday\\Desktop\\Salary.xlsx&quot;)
+    Salary
+    round(Salary$Avg_Salary)
+
+### Data modifying 
+    Agg_Salary_data &lt;- aggregate(Salary$Avg_Salary, list(Salary$District,Salary$Municipal_Status), FUN=mean ,simplify = TRUE) 
+    Agg_Salary_data
+    
+    colnames(Agg_Salary_data)[1] &lt;- &quot;District&quot;
+    colnames(Agg_Salary_data)[2] &lt;- &quot;Municipal_Status&quot;
+    colnames(Agg_Salary_data)[3] &lt;- &quot;Avarage_Salary&quot;
+    
+    Salary_by_District_and_MuniStatus &lt;- Agg_Salary_data %&gt;% pivot_wider(names_from = &quot;Municipal_Status&quot;,values_from = &quot;Avarage_Salary&quot;)
+    
+### Summary statistics Mean and Std.Dev
+    st(Salary,  group = &#39;District&#39;, group.long = TRUE, digits = 1)
+    summary(Salary)
+
+### Descriptive Statistics
+    BarChart(Municipal_Status, data = Salary )
+    BarChart(District, data = Salary )
+    hist(Salary$Avg_Salary)
+
+### Normality test
+    # Hypothesis:
+    # H0: X~norm
+    # H1: X!~norm
+    # Decision rule: p-value &lt; 0.05 --&gt; reject H0
+    
+    # KS test for normality test
+    ks.test(Salary$Avg_Salary, &quot;pnorm&quot;,)
+    ks.test(Agg_Salary_data$Avarage_Salary, &quot;pnorm&quot;,)
+    
+    # QQ plot for normality visualized test
+    qqnorm(Salary$Avg_Salary, pch = 1, frame = FALSE)
+    qqline(Salary$Avg_Salary, col = &quot;steelblue&quot;, lwd = 2)
+    
+    qqnorm(Agg_Salary_data$Avarage_Salary, pch = 1, frame = FALSE)
+    qqline(Agg_Salary_data$Avarage_Salary, col = &quot;steelblue&quot;, lwd = 2)
+    
+    # boxplot
+    boxplot(Salary$Avg_Salary~Salary$District)
+    boxplot(Salary$Avg_Salary~Salary$Municipal_Status)
+    
+    
+### X^2 Test for dependence 
+    # Hypothesis:
+    # H0: No dependencies between the variables 
+    # H1: There is dependence between the variables 
+    # Decision rule: p-value &lt; 0.05 --&gt; reject H0
+    
+    # Chi_Square test for Equality of Variance
+    chisq.test(Agg_Salary_data$District, Agg_Salary_data$Municipal_Status)
+    
+    
+### Barrlet Test for Equality of Variance
+    # Hypothesis:
+    # H0: Equality of Variance
+    # H1: No Equality of Variance
+    # Decision rule: p-value &lt; 0.05 --&gt; reject H0
+    
+    #Avg_Salary~District
+    Barrlet_for_Avg_Salary_and_District &lt;-bartlett.test(Agg_Salary_data$Avarage_Salary~Agg_Salary_data$District)
+    Barrlet_for_Avg_Salary_and_District
+    
+    #Avg_Salary~Municipal_Status
+    Barrlet_for_Avg_Salary_and_MuniStatus &lt;-bartlett.test(Agg_Salary_data$Avarage_Salary~Agg_Salary_data$Municipal_Status)
+    Barrlet_for_Avg_Salary_and_MuniStatus
+    
+
+#### Anova
+    
+    block_model &lt;- aov(Avarage_Salary ~ District + Municipal_Status, data = Agg_Salary_data)
+    summary(block_model)
+    
+    block_model1 &lt;- update(block_model,.~.-Municipal_Status, data = Agg_Salary_data)
+    anova(block_model1)
+    
+    block_model2 &lt;- update(block_model1,.~.-District, data = Agg_Salary_data)
+    anova(block_model2)
+
+### Duncan test for homogenize 
+    
+    duncan_test_for_homogenize &lt;- duncan.test(Agg_Salary_data$Avarage_Salary,Agg_Salary_data$District,11,581783)
+    duncan_test_for_homogenize
+    
+    duncan_test_for_homogenize &lt;- duncan.test(Agg_Salary_data$Avarage_Salary,Agg_Salary_data$Municipal_Status,11,581783)
+    duncan_test_for_homogenize
+
+    LSD&lt;-LSD.test(Agg_Salary_data$Avarage_Salary,Agg_Salary_data$District,11,581783)
+    LSD
+    
+    LSD&lt;-LSD.test(Agg_Salary_data$Avarage_Salary,Agg_Salary_data$Municipal_Status,11,581783)
+    LSD
+    </code></pre>
+<hr />
 <p>xfun::embed_file(here::here(“Experimental_Design”, “_Design_files_data.xlsx”), text = Download data source here”)</p>
 <div style="text-align: center>
 <p><img src="path.jpf" width="600px" min-width="300px" max width="300px" /></p>
 </div>
 <p>Distill is a publication format for scientific and technical writing, native to the web.</p>
 <p>Learn more about using Distill for R Markdown at <a href="https://rstudio.github.io/distill" class="uri">https://rstudio.github.io/distill</a>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

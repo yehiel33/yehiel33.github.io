@@ -16,7 +16,6 @@ knitr::opts_chunk$set(echo = FALSE)
 # 1. Introduction
 
 
-
 ---
 # 2. Model and Variables Definision:
 
@@ -25,7 +24,7 @@ $y_{ij} = \mu + \alpha_{j}+\beta_{i} + \varepsilon_{ij}$
 
 $j$ = District
 
-$i$ = Municipal Status
+$i$ = Municipal status
 
 * $y_{ij}$ - Average salary for employees by municipal status and district 
 * $\mu$ - Expectation 
@@ -54,9 +53,122 @@ $H_{1}$: Else
 
 # 3. Data Wrengling:
 
+---
 
+# 4. R
 
+### Load Libraries 
+```{r,echo = FALSE, message=FALSE,out.width="110%"}
+library(readxl)
+    library(vtable)
+    library(qwraps2) 
+    library(psych)
+    library(ggpubr)
+    library(lessR)
+    library(Hmisc)
+    library(ggplot2)
+    library(agricolae)
+    library(dplyr)
+    library(tidyr)
+    library(data.table)
+    
+### Load Data 
+    Salary <- read_excel("\\G:My Drive\\github\\yehiel33.github.io\\docs\\Salary.xlsx")
+    Salary
+    round(Salary$Avg_Salary)
 
+### Data modifying 
+    Agg_Salary_data <- aggregate(Salary$Avg_Salary, list(Salary$District,Salary$Municipal_Status), FUN=mean ,simplify = TRUE) 
+    Agg_Salary_data
+    
+    colnames(Agg_Salary_data)[1] <- "District"
+    colnames(Agg_Salary_data)[2] <- "Municipal_Status"
+    colnames(Agg_Salary_data)[3] <- "Avarage_Salary"
+    
+    Salary_by_District_and_MuniStatus <- Agg_Salary_data %>% pivot_wider(names_from = "Municipal_Status",values_from = "Avarage_Salary")
+    
+### Summary statistics Mean and Std.Dev
+    st(Salary,  group = 'District', group.long = TRUE, digits = 1)
+    summary(Salary)
+
+### Descriptive Statistics
+    BarChart(Municipal_Status, data = Salary )
+    BarChart(District, data = Salary )
+    hist(Salary$Avg_Salary)
+
+### Normality test
+    # Hypothesis:
+    # H0: X~norm
+    # H1: X!~norm
+    # Decision rule: p-value < 0.05 --> reject H0
+    
+    # KS test for normality test
+    ks.test(Salary$Avg_Salary, "pnorm",)
+    ks.test(Agg_Salary_data$Avarage_Salary, "pnorm",)
+    
+    # QQ plot for normality visualized test
+    qqnorm(Salary$Avg_Salary, pch = 1, frame = FALSE)
+    qqline(Salary$Avg_Salary, col = "steelblue", lwd = 2)
+    
+    qqnorm(Agg_Salary_data$Avarage_Salary, pch = 1, frame = FALSE)
+    qqline(Agg_Salary_data$Avarage_Salary, col = "steelblue", lwd = 2)
+    
+    # boxplot
+    boxplot(Salary$Avg_Salary~Salary$District)
+    boxplot(Salary$Avg_Salary~Salary$Municipal_Status)
+    
+    
+### X^2 Test for dependence 
+    # Hypothesis:
+    # H0: No dependencies between the variables 
+    # H1: There is dependence between the variables 
+    # Decision rule: p-value < 0.05 --> reject H0
+    
+    # Chi_Square test for Equality of Variance
+    chisq.test(Agg_Salary_data$District, Agg_Salary_data$Municipal_Status)
+    
+    
+### Barrlet Test for Equality of Variance
+    # Hypothesis:
+    # H0: Equality of Variance
+    # H1: No Equality of Variance
+    # Decision rule: p-value < 0.05 --> reject H0
+    
+    #Avg_Salary~District
+    Barrlet_for_Avg_Salary_and_District <-bartlett.test(Agg_Salary_data$Avarage_Salary~Agg_Salary_data$District)
+    Barrlet_for_Avg_Salary_and_District
+    
+    #Avg_Salary~Municipal_Status
+    Barrlet_for_Avg_Salary_and_MuniStatus <-bartlett.test(Agg_Salary_data$Avarage_Salary~Agg_Salary_data$Municipal_Status)
+    Barrlet_for_Avg_Salary_and_MuniStatus
+    
+
+#### Anova
+    
+    block_model <- aov(Avarage_Salary ~ District + Municipal_Status, data = Agg_Salary_data)
+    summary(block_model)
+    
+    block_model1 <- update(block_model,.~.-Municipal_Status, data = Agg_Salary_data)
+    anova(block_model1)
+    
+    block_model2 <- update(block_model1,.~.-District, data = Agg_Salary_data)
+    anova(block_model2)
+
+### Duncan test for homogenize 
+    
+    duncan_test_for_homogenize <- duncan.test(Agg_Salary_data$Avarage_Salary,Agg_Salary_data$District,11,581783)
+    duncan_test_for_homogenize
+    
+    duncan_test_for_homogenize <- duncan.test(Agg_Salary_data$Avarage_Salary,Agg_Salary_data$Municipal_Status,11,581783)
+    duncan_test_for_homogenize
+
+    LSD<-LSD.test(Agg_Salary_data$Avarage_Salary,Agg_Salary_data$District,11,581783)
+    LSD
+    
+    LSD<-LSD.test(Agg_Salary_data$Avarage_Salary,Agg_Salary_data$Municipal_Status,11,581783)
+    LSD
+    
+```
 
 ---
 
