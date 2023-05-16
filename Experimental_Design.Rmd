@@ -58,7 +58,7 @@ $H_{1}$: Else
 # 4. R
 
 ### Load Libraries 
-#```{r,echo = FALSE, message=FALSE,out.width="110%"}
+```{r,echo = FALSE, message=FALSE,out.width="110%"}
 library(readxl)
     library(vtable)
     library(qwraps2) 
@@ -73,9 +73,10 @@ library(readxl)
     library(data.table)
     
 ### Load Data 
-    Salary <- read_excel("\G:\My Drive\github\yehiel33.github.io\Salary.xlsx")
+    Salary <- read_excel("docs/Salary.xlsx")
     Salary
     round(Salary$Avg_Salary)
+    
 
 ### Data modifying 
     Agg_Salary_data <- aggregate(Salary$Avg_Salary, list(Salary$District,Salary$Municipal_Status), FUN=mean ,simplify = TRUE) 

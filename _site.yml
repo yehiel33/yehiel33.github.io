@@ -26,6 +26,8 @@ navbar:
             href: ADVSQL.html
     - text: "R"
       href: R.html
+    - text: "Job Interviews"
+      href: Job_Interviews.html
     - text: "Data Center"
       href: Data Center.html
 output: distill::distill_article
