@@ -53,6 +53,18 @@ $H_{1}$: Else
 
 # 3. Data Wrengling:
 
+## step 1 - finding the data
+
+
+## step 2 - choosing study subject
+image: "Picture2.png"
+
+## step 3 - importing to R
+image: "Picture3.png"
+
+## step 4 - grouping
+image: "Picture4.png"
+
 ---
 
 # 4. R

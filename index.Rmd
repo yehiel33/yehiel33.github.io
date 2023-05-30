@@ -15,11 +15,11 @@ site: distill::distill_website
  
 ## Bio
 
-At the last 10 years i gained great experience and knowledge while working in 4 organisation in data center industry. In parallel, i graduated Bachelors degree in industrial engineering and management and majored in information systems.
+Over the past decade, I have amassed valuable experience and expertise by working in four different organizations within the data center industry. Simultaneously, I pursued my Bachelor's degree in industrial engineering and management, with a specialization in information systems.
 
-Now, i am fill ready to look for my next challenge and opportunity. I am very interested in data filed so i aim a target to became a data analyst.
+Equipped with this diverse background, I am now fully prepared to embark on my next challenge and seize new opportunities. My passion lies in the field of data, and my ultimate goal is to establish myself as a data analyst.
 
-This web page combining with my github page will expose my projects and capabilities to you. 
+To showcase my projects and demonstrate my capabilities, I have created a web page that complements my GitHub portfolio. This combined platform will provide you with comprehensive insights into my skills and accomplishments. 
 
 ## Education
 
