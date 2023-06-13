@@ -1,0 +1,524 @@
+---
+title: "Data science project"
+output:
+  ioslides_presentation: default
+  slidy_presentation: default
+  beamer_presentation:
+    keep_tex: yes
+widescreen: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r, echo=FALSE, message=FALSE,warning=FALSE} 
+library(dplyr)
+library(car)
+library(ggplot2)
+library(plotly)
+library(leaflet)
+library(tidyverse)
+library(FinCal)
+library(fmsb)
+library(RColorBrewer)
+library(scales)
+library(hrbrthemes)
+
+library(plotrix)
+education<-read.csv("protable_comma.csv",header = T)
+
+# טעינת צבעים
+coul <- brewer.pal(3, "BuPu")
+colors_border <- coul
+colors_in <- alpha(coul,0.7)
+
+protable_comma_t <- as_tibble(education)
+
+
+
+```
+
+## זכאות לבגרות ברשויות מקומיות ועיריות
+* Lecturer: Dr Lana Daichman
+
+* authors:
+* Yehiel Yegudayev 
+* Maya Lavi 
+* Shani Levi 
+* Itamar Shtrum
+* Naor Ohana"
+
+הנתונים לקוחים מתוך אתר הלמ"ס
+הנתונים נלקחו בשנת 2018 
+
+
+## סטטיסטיקה תיאורית
+```{r fig2, fig.height = 3, fig.width = 3, fig.align = "center",out.width="50%"}
+summary(protable_comma_t)
+```
+
+## Pie chart: עירייה ~ מועצה מקומית
+```{r,echo = FALSE, message=FALSE,out.width="110%"}
+##install.packages("plotrix")
+
+Munici_count <- as.integer(count(subset(protable_comma_t, Municipal_status=="Municipality")))
+local_count  <- as.integer(count(subset(protable_comma_t, Municipal_status=="local council")))
+slices <- c(Munici_count, local_count)
+
+lbls <- c("Municipality", "Local Council")
+pie3D(slices,labels=slices,explode=0.1, main="Pie Chart of Municipality Status", col= c("green","blue"))
+
+legend("topright", c("Municipality","Local Council"), cex = 0.7,
+       fill = c("green","blue"), bty= "n")
+
+```
+
+
+## ניתוחים סטטיסטיים על גורמים חינוכיים
+* אחוז שטח מוקצה לחינוך מתוך סך שטח שיפוט
+* ממוצע תלמידים למורה
+* אחוז בעלי תארים מתוך אוכלוסיית גילאים 35-55
+* 
+## רגרסיה לינארית
+בדיקת השפעת בעלי תארים מגיל 35-55 ואחוז מוקצה לחינוך מתוך סך שיפוט על זכאות לבגרות
+
+הנחת המודל
+
+y=β0+β1∗x1+β2∗x2
+
+β0 - חותך
+
+β1,β2 -  קצב השינוי במשתנה
+
+x1 - מסביר. ממוצע של אחוז בעלי תארים בישראל מתוך אוכלוסיית בני 35 עד 55
+
+x2-אחוז מסך כל שטח השיפוט המוקצה להשכלה
+
+y - מוסבר. אחוז מקבלי תעודת בגרות ברשות
+השערות
+
+H0:β1=β2
+
+H1:other
+
+
+
+
+
+---
+```{r, echo=FALSE, message=FALSE,warning=FALSE}
+linearmodel <- lm(percentage_Bagrut_certificate ~  percentage_degree_holders_age_55.35+Education_area_.percentage, data = education) ##linear regrassion model 
+
+summary(linearmodel)
+```
+
+---
+P-value<0.05
+
+לכן <div class="blue"> נדחה את השערת האפס</div> ונסיק כי קיים הבדל בין הבתות.
+
+בנוסף,
+Adjustes R-square=0.5091
+
+לפי מדד זה, נסיק כי המסבירים מצליחים להסביר כ-50% מההשתנות של אחוז קבלת תעודת הבגרות.
+
+y=59.811+0.657∗x1-2.934∗x2
+
+## גרף על הניתוח הסטטיסטי
+
+```{r, echo=FALSE, message=FALSE,warning=FALSE}
+ggplot(education,aes(y=percentage_Bagrut_certificate,x=percentage_degree_holders_age_55.35,color=Education_area_.percentage))+geom_point()+stat_smooth(method="lm",se=FALSE)
+
+```
+
+## שטח מוקצה לחינוך למחוז
+```{r, echo=FALSE, message=FALSE,warning=FALSE}
+distric_name <- sort(c(unique(education$region)))
+precent_of_ed_area <- aggregate(education$Education_area_.percentage, by=list(Name=education$region), FUN = "mean")
+Education_area_percentage<-round(c(precent_of_ed_area$x),2)
+# Barplot
+p<-ggplot(precent_of_ed_area, aes(x=distric_name, y=Education_area_percentage)) + 
+  geom_bar(stat = "identity", width=0.7) 
+p+geom_text(aes(label=Education_area_percentage),nudge_y =0.2)
+```
+
+
+
+## t test לממוצע תלמידים למורה בכיתה
+Ho:μ1=μ2
+ 
+H1:μ1≠μ2
+
+
+
+```{r}
+
+up_median111<-filter(education, Average_students_per_teacher >median(Average_students_per_teacher ))%>%
+  select(Average_students_per_teacher , percentage_Bagrut_certificate)
+low_median111<-filter(education, Average_students_per_teacher <median(Average_students_per_teacher ))%>%
+  select(Average_students_per_teacher , percentage_Bagrut_certificate)
+t.test(up_median111,low_median111)
+```
+
+## מסקנות מהמבחן הסטטיסטי
+
+p-value>0.05
+
+<div class="red2">
+לכן לא נדחה השערת האפס ונסיק כי התוחלות בין שני החציונים שוות
+</div>
+
+זאת אומרת, אין השפעה על המצאות בחציון מסויים על אחוז הזכאות לבגרות.
+
+
+
+
+## זכאות לבגרות לפי מחוזות
+ 
+```{r, echo=FALSE, message=FALSE,warning=FALSE} 
+
+
+bagruiot_by_district <- education %>%
+  plot_ly( x = ~ region ,y = ~education$percentage_Bagrut_certificate ,split = ~region, type = 'violin',
+           box = list(  visible = T ), meanline = list(visible = T)
+  ) %>% 
+  layout(  xaxis = list( title = "regions" ),  yaxis = list( title = "bagrut certificate ",
+                                                              zeroline = F ))
+bagruiot_by_district
+
+
+```
+
+
+
+
+## Map of tel aviv and center districts
+כעת נציג את מחוזות ת"א ומרכז בהם ראינו כי אחוז הזכאות לבגרות הממוצע הגבוה ביותר, כאשר ת"א היא בירת מחוז ת"א ורמלה היא בירת מחוז מרכז ולכן נציגה.
+
+
+```{r}
+
+district_loc <- leaflet() %>%
+  addTiles() %>%  
+  addMarkers(lng=c(34.866667,34.78176759999999), lat=c(31.933333,32.0852999), popup="Map center and Tel aviv district")
+district_loc  
+
+```
+
+
+
+## משתנים דמוגרפיים
+:נרצה לבדוק את השפעת המשתנים הבאים על אחוז הזכאות לבגרות
+
+* מאזן הגירה
+* מרחק מגבול תל אביב
+* צפיפות אוכלוסין
+
+## מבחן פירסון
+### נבדוק הקשר בין אחוז הזכאות לבגרות לבין המשתנים הדמוגרפיים
+
+**:ניסוח השערות**
+
+H0:ρ = 0
+
+H1:ρ ≠ 0
+
+
+##  ?האם יש קשר בין הגירה לזכאות לבגרות
+```{r,echo = FALSE, message=FALSE, warning=FALSE}
+Bagrut_Percentage<-education$percentage_Bagrut_certificate
+Maazan_Hagira<-education$Hgira
+cor.test(Maazan_Hagira, Bagrut_Percentage)
+```
+
+**:מסקנה**
+
+- (P value < 5%)
+-  נדחה את השערת האפס ונסיק כי יש קורצליה בין המשתנים
+- ניתן לראות שקיים מתאם חיובי חלש
+
+## ?האם יש קשר בין מרחק מת"א לזכאות לבגרות
+```{r,echo = FALSE, message=FALSE, warning=FALSE}
+Bagrut_Percentage<-education$percentage_Bagrut_certificate
+Distance_from_TLV<-education$Distance_from_TLV
+cor.test(Distance_from_TLV, Bagrut_Percentage)
+```
+
+**:מסקנה**
+
+- (P value > 5%)
+- נקבל את השערת האפס ונסיק כי אין קורצליה בין המשתנים
+
+
+## האם יש קשר בין צפיפות אוכלוסין לזכאות לבגרות
+```{r,echo = FALSE, message=FALSE, warning=FALSE}
+Bagrut_Percentage<-education$percentage_Bagrut_certificate
+Population_Density<-education$Population_density
+
+cor.test(Population_Density, Bagrut_Percentage)
+```
+
+
+**:מסקנה**
+
+- (P value < 5%)
+-  נדחה את השערת האפס ונסיק כי יש קורצליה בין המשתנים
+- ניתן לראות שקיים מתאם שלילי חלש
+
+
+
+
+## :תיאור תוצאות מבחן פירסון באמצעות גרפים
+
+```{r,echo = FALSE, message=FALSE, warning=FALSE, fig.ncol = 2, figures-side, fig.show="hold", out.width="50%"}
+################ תרשים מכ"מ של מרחק מתל אביב לפי מחוזות#############
+region_Names <- sort(c(unique(education$region))) # שליפת שמות האזורים ללא כפילויות
+
+
+# ספירת ממוצע מרחק מתל אביב לכל מחוז
+initial_values <- aggregate(education$Distance_from_TLV, by=list(Name=education$region), FUN = "mean")
+values_Distance_from_TLV<-c(initial_values$x) # סידור הערכים בצורת הוקטור הרצוי 
+
+max <- rep(round(max(values_Distance_from_TLV),2),7) # הגדרת ערך מקסימלי לתרשים ומספר חזרות
+min <- rep(min(education$Distance_from_TLV),7) # הגדרת ערך מינימלי לתרשים ומספר חזרות
+
+
+Distance_valuse_to_chart <- data.frame(rbind(max,min,values_Distance_from_TLV)) # איחוד הוקטורים שנשלפו עד כה
+
+colnames(Distance_valuse_to_chart) <- region_Names # הגדרת שמות לתרשים        
+
+radarchart(Distance_valuse_to_chart,title = "מרחק מתל אביב",
+           seg = 7,axistype = 2,
+           #custom polygon
+           pfcol=colors_in ,plwd = 4, plty = 1 ,pcol = "red",  
+           #custom the grid
+           cglcol="grey", cglty=1, axislabcol="black",cglwd=1,
+           #custom labels
+           vlcex=1.2 )
+####################################################################
+##################### תרשים מכ"מ של מאזן הגירה לפי מחוזות ##########
+
+region_Names <- sort(c(unique(education$region))) # שליפת שמות האזורים ללא כפילויות
+
+# ספירת ממוצע מרחק מתל אביב לכל מחוז
+initial_values <- aggregate(education$Hgira, by=list(Name=education$region), FUN = "mean")
+values_Hgira<-c(initial_values$x) # סידור הערכים בצורת הוקטור הרצוי 
+
+max <- rep(round(max(values_Hgira),2),7) # הגדרת ערך מקסימלי לתרשים ומספר חזרות
+min <- rep(min(values_Hgira),7) # הגדרת ערך מינימלי לתרשים ומספר חזרות
+
+Hagira_valuse_to_chart <- data.frame(rbind(max,min,values_Hgira)) # איחוד הוקטורים שנשלפו עד כה
+
+colnames(Hagira_valuse_to_chart) <- region_Names # הגדרת שמות לתרשים        
+
+radarchart(Hagira_valuse_to_chart,title = "מאזן הגירה",
+           seg = 7,axistype = 2,
+           #custom polygon
+           pfcol=colors_in ,plwd = 4, plty = 1 ,pcol = "orange",  
+           #custom the grid
+           cglcol="grey", cglty=1, axislabcol="black",cglwd=1,
+           #custom labels
+           vlcex=1.2 )
+####################################################################
+################ תרשים מכ"מ של צפיפות אוכלוסין לפי מחוזות ##########
+
+region_Names <- sort(c(unique(education$region))) # שליפת שמות האזורים ללא כפילויות
+
+# ספירת ממוצע מרחק מתל אביב לכל מחוז
+initial_values <- aggregate(education$Population_density, by=list(Name=education$region), FUN = "mean")
+values_Population_density<-c(initial_values$x) # סידור הערכים בצורת הוקטור הרצוי 
+
+
+max <- rep(round(max(values_Population_density),2),7) # הגדרת ערך מקסימלי לתרשים ומספר חזרות
+min <- rep(min(values_Population_density),7) # הגדרת ערך מינימלי לתרשים ומספר חזרות
+
+values_Population_density_to_chart <- data.frame(rbind(max,min,values_Population_density)) # איחוד הוקטורים שנשלפו עד כה
+
+colnames(values_Population_density_to_chart) <- region_Names # הגדרת שמות לתרשים        
+
+radarchart(values_Population_density_to_chart, title = "צפיפות אוכלוסין",
+           seg = 7,axistype = 2,
+           #custom polygon
+           pfcol=colors_in ,plwd = 4, plty = 1 ,pcol = "Green",  
+           #custom the grid
+           cglcol="grey", cglty=1, axislabcol="black",cglwd=1,
+           #custom labels
+           vlcex=1.2 )
+####################################################################
+############### תרשים מכ"מ של אחוז זכאות לבגרות לפי מחוזות #########
+
+region_Names <- sort(c(unique(education$region))) # שליפת שמות האזורים ללא כפילויות
+
+# ספירת ממוצע מרחק מתל אביב לכל מחוז
+initial_values <- aggregate(education$percentage_Bagrut_certificate, by=list(Name=education$region), FUN = "mean")
+values_percentage_Bagrut_certificate<-round(c(initial_values$x),2) # סידור הערכים בצורת הוקטור הרצוי 
+
+
+max <- rep(max(values_percentage_Bagrut_certificate),7) # הגדרת ערך מקסימלי לתרשים ומספר חזרות
+min <- rep(min(values_percentage_Bagrut_certificate),7) # הגדרת ערך מינימלי לתרשים ומספר חזרות
+
+
+values_percentage_Bagrut_certificate_to_chart <- data.frame(rbind(max,min,values_percentage_Bagrut_certificate)) # איחוד הוקטורים שנשלפו עד כה
+colnames(values_percentage_Bagrut_certificate_to_chart) <- region_Names # הגדרת שמות לתרשים        
+
+radarchart(values_percentage_Bagrut_certificate_to_chart,title = "אחוז הזכאות לבגרות",
+           seg = 4,axistype = 2,
+           #custom polygon
+           pfcol=colors_in ,plwd = 4, plty = 1 ,pcol = "Blue",  
+           #custom the grid
+           cglcol="grey", cglty=1, axislabcol="black",cglwd=1,
+           #custom labels
+           vlcex=1.2 )
+####################################################################
+```
+
+
+
+
+## גרף פיזור נתונים
+```{r,echo = FALSE, message=FALSE, warning=FALSE}
+Socio_economic_cluster <- sort(c(unique(education$Socio.economic_cluster)))  
+
+region_Names <- sort(c(unique(education$region))) 
+
+region<-education$region
+
+p <- ggplot(education, aes(x = Socio.economic_cluster, y = percentage_Bagrut_certificate))
+
+p+geom_point(aes(color = factor(region)),
+                 size = 2)+
+                  scale_x_continuous(breaks = seq(1, 10, by = 1))+
+                  scale_y_continuous(breaks = seq(0, 100, by = 10))+
+                  xlab("אשכול סוציו-אקונומי")+ylab("אחוז זכאות לבגרות")
+```
+
+
+
+
+## gg-plot:   אחוז תקציב מוקצה לחינוך ברשות (לפי רבעונים) ~ אחוזי מקבלי תעודת בגרות ברשות
+ 
+```{r,echo = FALSE, message=FALSE,out.width="75%"}
+##installed.packages("ggplot2")
+
+grouptable2<- education %>%
+  mutate(group_budget=cut(education_budget_percentage,breaks = c(11,23.6,28.2,34.3,52)))
+
+ggplot(grouptable2, aes(x = group_budget, y = percentage_Bagrut_certificate)) +
+  geom_jitter(position = position_jitter(width=0.2), alpha=0.25) +
+  stat_summary(fun=median, color="red", geom="point", size=2)
+
+```
+
+
+## t-test: הבדל בין חציונים
+
+בדקנו האם קיים הבדל בין החציון העליון של מאזן הכנסות-הוצאות הפרטי לבין החציון התחתון ביחס לאחוז קבלת תעודת הבגרות
+השערות המבחן שלנו הן:
+
+Ho:μ1=μ2
+ 
+H1:μ1≠μ2
+
+```{r}
+up_median<-select(filter(education, expenditure_per_capita>median(expenditure_per_capita))
+                    ,percentage_Bagrut_certificate,expenditure_per_capita)
+low_median<-select(filter(education, expenditure_per_capita<median(expenditure_per_capita))
+                     ,percentage_Bagrut_certificate,expenditure_per_capita)
+t.test(up_median,low_median)
+```
+## מסקנות מהמבחן
+
+p-value<0.05
+
+<div class="red2">
+לכן נדחה השערת האפס ונסיק כי התוחלות בין שני החציונים אינן שוות
+</div>
+
+
+
+
+## QQ-Plot : הכנסה ממוצעת לנפש ~ אחוז תקציב לחינוך ברשות
+```{r,echo = FALSE, message=FALSE,out.width="80%"}
+
+library(corrplot)
+
+qqplot(education$education_budget_percentage, education$income_per_capita, plot.it = TRUE,
+       xlab = deparse(substitute(budget)),
+       ylab = deparse(substitute(income_per_capita)),
+       main= "QQ-Plot for linear connection")
+
+
+
+```
+
+
+
+
+## רגרסיה ליניארית פשוטה
+
+y=β0+β1∗x1
+
+β0 - חותך
+
+β1 -  קצב השינוי במשתנה
+
+x1 - מסביר. הכנסה ממוצעת לנפש
+
+y - מוסבר. אחוז מקבלי תעודת בגרות ברשות
+
+
+השערות:
+
+H0:β1=0
+
+H1:β1≠0
+
+## פלט רגרסיה
+```{r, out.width="50%"}
+linearmode_economy <- lm(education$percentage_Bagrut_certificate ~  education$income_per_capita, data = education) ##linear regrassion model 
+summary(linearmode_economy)
+
+```
+
+## גרף מדרגות משתנים כלכליים
+```{r,echo = FALSE, message=FALSE,warning=FALSE, include=FALSE}
+library(corrplot)
+library(tidyverse)
+education.corr <- education %>% 
+select(Bagrut_p=percentage_Bagrut_certificate,Incom_per_c =income_per_capita, Budget=education_budget_percentage, Expend_p_cap=expenditure_per_capita)
+cor(education.corr) # get the correlation matrix
+```
+
+```{r,echo = FALSE, message=FALSE,warning=FALSE, out.width="60%"}
+
+corrplot(cor(education.corr), method="number", type="lower", bg="grey")
+
+
+```
+
+## בדיקת ערך עתידי 
+
+מטרתנו לפתוח תוכנית חיסכון לעשר שנים אשר בסופה נרצה סכום של לפחות 250,000 ש"ח.
+
+כאשר:
+
+* נשקיע ביום הראשון סכום חד פעמי של 100,000 ש"ח.
+* בסוף כל שנה נפקיד סכום של 5,000 ש"ח
+* ריבית על החיסכון הינה 7%.
+
+נסדוק בתנאים אלה האם נעמוד ביעד: 
+
+
+```{r}
+
+
+fv(0.07,10,-100000,-5000,0)
+
+```
+
+
+הסכום הסופי שנוציא בתום עשר השנים הינו 265,797.4 ש"ח ולכן כן נעמוד ביעד ונפתח תוכנית חיסכון זו.
+
+
+

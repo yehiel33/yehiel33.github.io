@@ -1,13 +1,8 @@
 ---
 title: "SQL"
-description: |
-date: "`r Sys.Date()`"
 image: "Page_Under_Construction.jpg"
-output:
-  postcards::trestles
-site: distill::distill_website
+output: postcards::trestles
 ---
-
 
 
 

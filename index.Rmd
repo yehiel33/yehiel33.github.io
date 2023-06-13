@@ -15,17 +15,11 @@ site: distill::distill_website
  
 ## Bio
 
-Over the past decade, I have amassed valuable experience and expertise by working in four different organizations within the data center industry. Simultaneously, I pursued my Bachelor's degree in industrial engineering and management, with a specialization in information systems.
-
-Equipped with this diverse background, I am now fully prepared to embark on my next challenge and seize new opportunities. My passion lies in the field of data, and my ultimate goal is to establish myself as a data analyst.
-
-To showcase my projects and demonstrate my capabilities, I have created a web page that complements my GitHub portfolio. This combined platform will provide you with comprehensive insights into my skills and accomplishments. 
+I am an ambitious Industrial engineer graduate and professional Data Center Engineer with 10 years of hands on experience. I am creative, hardworking and a strong believer in the "can-do" attitude.
 
 ## Education
 
-**SCE** | Beer-Sheva, Israel
-
-B.Sc. in Industrial Engineering and Management | October 2018 - March 2023
+**SCE** | B.Sc. Industrial Engineering and Management | 2023
 
 ## Experience
 

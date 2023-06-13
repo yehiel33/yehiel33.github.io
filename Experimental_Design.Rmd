@@ -3,6 +3,9 @@ title: "Experimental Design"
 description: |
   As part of experimental design course in academics, i looked up for the parameters influancing housing prices. i used block model for this.
   Score: 100
+label: "Applied Statistics" 
+label: "R" 
+label: "Block model" 
 date: "`r Sys.Date()`"
 output: distill::distill_article
 ---
@@ -14,9 +17,9 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ---
 # 1. Introduction
+  As part of experimental design course in academics, i looked up for the parameters influancing housing prices. i used block model for this.
+  Score: 100
 
-
----
 # 2. Model and Variables Definision:
 
 ### Definisions:

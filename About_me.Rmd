@@ -1,7 +1,6 @@
 ---
 title: "About me"
-date: "`r Sys.Date()`"
-output: distill::distill_article
+output: postcards::trestles
 ---
 
 Over the past decade, I have amassed valuable experience and expertise by working in four different organizations within the data center industry. Simultaneously, I pursued my Bachelor's degree in industrial engineering and management, with a specialization in information systems.
