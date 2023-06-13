@@ -2,17 +2,11 @@
   "articles": [
     {
       "path": "About_me.html",
-      "title": "Untitled",
-      "description": "A new article created using the Distill format.\n",
-      "author": [
-        {
-          "name": "Nora Jones",
-          "url": "https://example.com/norajones"
-        }
-      ],
+      "title": "About me",
+      "author": [],
       "date": "`r Sys.Date()`",
-      "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2023-05-30T21:03:31+03:00"
+      "contents": "\r\nOver the past decade, I have amassed valuable experience and expertise by working in four different organizations within the data center industry. Simultaneously, I pursued my Bachelor’s degree in industrial engineering and management, with a specialization in information systems.\r\nEquipped with this diverse background, I am now fully prepared to embark on my next challenge and seize new opportunities. My passion lies in the field of data, and my ultimate goal is to establish myself as a data analyst.\r\nTo showcase my projects and demonstrate my capabilities, I have created a web page that complements my GitHub portfolio. This combined platform will provide you with comprehensive insights into my skills and accomplishments.\r\n\r\n\r\n\r\n",
+      "last_modified": "2023-06-13T15:45:58+03:00"
     },
     {
       "path": "Experimental_Design.html",
