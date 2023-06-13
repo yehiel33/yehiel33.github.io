@@ -19,11 +19,7 @@ navbar:
           - text: "Experimental Design"
             href: Experimental_Design.html
     - text: "SQL"
-      menu:
-          - text: Simple SQL 
-            href: SIMSQL.html
-          - text: Advanced SQL 
-            href: ADVSQL.html
+      href: SQL.html
     - text: "R"
       href: R.html
     - text: "Job Interviews"
